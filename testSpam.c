@@ -8,7 +8,7 @@
 
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 200
 # endif
 
 typedef struct s_info

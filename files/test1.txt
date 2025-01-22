@@ -1,0 +1,11 @@
+PASS 4242
+NICK sm222
+USER sm222 * 0 :anboisve
+#
+JOIN #test,#test2
+#
+PRIVMSG #test,#test2 :HEAD
+PRIVMSG #test,#test2 :END
+#
+#PART #test,#test2
+QUIT
