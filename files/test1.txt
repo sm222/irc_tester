@@ -7,5 +7,6 @@ JOIN #test,#test2
 PRIVMSG #test,#test2 :HEAD
 PRIVMSG #test,#test2 :END
 #
+NICK Nad
 #PART #test,#test2
-QUIT
+#QUIT
