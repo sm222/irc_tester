@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 ip=""
 port="6667"

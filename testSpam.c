@@ -6,6 +6,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdbool.h>
+# include <strings.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 200
@@ -149,27 +150,40 @@ char	*get_next_line(int fd) {
 
 
 typedef struct Setting {
-	bool interactive;
-	int 	sleep;
-	int 	speed;
-	int		verbose;
+	const char*	progameName;
+	bool		interactive;
+	int 		sleep;
+	int 		speed;
+	int			verbose;
 } t_Setting;
 
 
+#define ERRORMSG 10
 
 void readFile(const char* fileName, t_Setting* sys) {
 	const int fd = open(fileName, O_RDONLY);
 	if (fd < 0) {
-		perror("open");
+		size_t errmsg = strlen(fileName);
+		char fileNameError[errmsg + ERRORMSG];
+		bzero(&fileNameError, errmsg + ERRORMSG);
+		memmove(fileNameError, "open ", 5);;
+		memmove(fileNameError + 5, fileName, errmsg);
+		perror(fileNameError);
 		return ;
 	}
+	size_t i = 0;
 	char* line = "";
 	while (line) {
 		line = get_next_line(fd);
+		i++;
 		if (line && (line[0] != '#' && line[0] != '\n')) {
 			const size_t len = ft_strlen(line);
-			if (sys->verbose)
-				write(STDOUT_FILENO, line, len);
+			if (sys->verbose) {
+				const int buffSize = len + 20;
+				char verboseLine[buffSize];
+				const int verboseB = snprintf(verboseLine, buffSize, "%zu: -> %s", i, line);
+				write(STDERR_FILENO, verboseLine, verboseB);
+			}
 			write(STDOUT_FILENO, line, len);
 		}
 		free(line);
@@ -178,7 +192,7 @@ void readFile(const char* fileName, t_Setting* sys) {
 	close(fd);
 }
 
-#define FLAG_LIST "isShvV"
+#define FLAG_LIST "isShv"
 
 const char* __help[] = {
 	"----------------------------------------------",
@@ -197,7 +211,7 @@ void printHelp(void) {
 	}
 }
 
-void SetSetting(t_Setting *sysSetting, int c, const char* programeName) {
+void SetSetting(t_Setting *sysSetting, int c) {
 	switch (c) {
 	case 'i':
 		sysSetting->interactive = true;
@@ -215,13 +229,14 @@ void SetSetting(t_Setting *sysSetting, int c, const char* programeName) {
 		printHelp();
 		exit(0);
 	default:
-		fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", programeName, c, FLAG_LIST);
+		fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", sysSetting->progameName, c, FLAG_LIST);
 		break;
 	}
 }
 
 void userInput(void) {
 	char* user = "";
+	fprintf(stderr, "user input mode:\n");
 		while (user) {
 			user =  get_next_line(STDIN_FILENO); //user input
 			if (user) {
@@ -235,6 +250,7 @@ int main(int ac, char** av) {
 	t_Setting sysSetting;
 	//
 	ft_bzero(&sysSetting, sizeof(sysSetting));
+	sysSetting.progameName = av[0];
 	sysSetting.sleep = 1000;
 	sysSetting.speed = 1;
 	//
@@ -244,7 +260,7 @@ int main(int ac, char** av) {
 			if (av[i] && av[i][0] == '-') {
 				size_t arglen = strlen(av[i]);
 				for (size_t j = 1; j < arglen; j++) {
-					SetSetting(&sysSetting, av[i][j], av[0]);
+					SetSetting(&sysSetting, av[i][j]);
 				}
 			}
 			else {
@@ -254,6 +270,8 @@ int main(int ac, char** av) {
 		}
 		if (sysSetting.interactive)
 			userInput();
+		else
+			sleep(2);
 	}
 	else {
 		fprintf(stderr, "%s {file*}\n" , av[0]);
