@@ -147,12 +147,12 @@ char	*get_next_line(int fd) {
 	return (safe_return(&book, &t_val));
 }
 
-#define FLAG_LIST "isS"
 
 typedef struct Setting {
 	bool interactive;
-	int  sleep;
-	int  speed;
+	int 	sleep;
+	int 	speed;
+	int		verbose;
 } t_Setting;
 
 
@@ -166,17 +166,36 @@ void readFile(const char* fileName, t_Setting* sys) {
 	char* line = "";
 	while (line) {
 		line = get_next_line(fd);
-		if (line && (line[0] != '#' && line[0] != '\n'))
-			write(STDOUT_FILENO, line, ft_strlen(line));
+		if (line && (line[0] != '#' && line[0] != '\n')) {
+			const size_t len = ft_strlen(line);
+			if (sys->verbose)
+				write(STDOUT_FILENO, line, len);
+			write(STDOUT_FILENO, line, len);
+		}
 		free(line);
 		usleep(sys->sleep * sys->speed);
 	}
 	close(fd);
 }
 
+#define FLAG_LIST "isShvV"
 
+const char* __help[] = {
+	"----------------------------------------------",
+	"i - give back the control after the scrip run",
+	"s - set usleep speed to 100000 (default 1000)",
+	"S - set usleep speed to 1000000",
+	"v - prits line send from file in stderr",
+	"----------------------------------------------",
+	NULL
+};
 
-
+void printHelp(void) {
+	size_t i = 0;
+	while (__help[i]) {
+		fprintf(stderr, "%s\n", __help[i++]);
+	}
+}
 
 void SetSetting(t_Setting *sysSetting, int c, const char* programeName) {
 	switch (c) {
@@ -189,14 +208,30 @@ void SetSetting(t_Setting *sysSetting, int c, const char* programeName) {
 	case 'S':
 		sysSetting->speed = 1000;
 		break;
+	case 'v':
+		sysSetting->verbose = 1;
+		break;
+	case 'h':
+		printHelp();
+		exit(0);
 	default:
 		fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", programeName, c, FLAG_LIST);
 		break;
 	}
 }
 
-int main(int ac, char** av) {
+void userInput(void) {
+	char* user = "";
+		while (user) {
+			user =  get_next_line(STDIN_FILENO); //user input
+			if (user) {
+				write(STDOUT_FILENO, user, ft_strlen(user));
+				free(user);
+			}
+		}
+}
 
+int main(int ac, char** av) {
 	t_Setting sysSetting;
 	//
 	ft_bzero(&sysSetting, sizeof(sysSetting));
@@ -217,17 +252,11 @@ int main(int ac, char** av) {
 			}
 			i++;
 		}
-		char* user = "";
-		while (user) {
-			user =  get_next_line(STDIN_FILENO); //user input
-			if (user) {
-				write(STDOUT_FILENO, user, ft_strlen(user));
-				free(user);
-			}
-		}
+		if (sysSetting.interactive)
+			userInput();
 	}
 	else {
-		printf("%s {file*}\n" , av[0]);
+		fprintf(stderr, "%s {file*}\n" , av[0]);
 	}
 	return 0;
 }
