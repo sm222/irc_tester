@@ -1,4 +1,7 @@
 #!/bin/bash
+fileDir='src'
 
-echo "cc -Wall -Werror -Wextra testSpam.c -o 'irc_tester'"
-cc -Wall -Werror -Wextra testSpam.c -o 'irc_tester'
+compileLine="cc -Wall -Werror -Wextra -g $fileDir/main.c $fileDir/tools.c -o irc_tester"
+
+echo $compileLine
+$compileLine
