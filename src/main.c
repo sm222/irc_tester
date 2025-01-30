@@ -10,14 +10,24 @@ void setColors(void) {
 	Colors[6] = RESET;
 }
 
+ssize_t sendData(const char* const line, const size_t byte, int const fd) {
+	if (!fd)
+		return (write(STDOUT_FILENO, line, byte));
+	return (send(fd, line, byte, 0));
+}
+
+void printError(const char* const fileName, int colors) {
+	size_t errmsg = strlen(fileName) + ERRORMSG + (colors == 2 ? MAX_COLORLEN : 0);
+	char fileNameError[errmsg];
+	bzero(&fileNameError, errmsg);
+	snprintf(fileNameError, errmsg - 1, "%sopen %s%s", Colors[0], fileName, Colors[6]);
+	perror(fileNameError);
+}
+
 void readFile(const char* fileName, t_Setting* sys) {
 	const int fd = open(fileName, O_RDONLY);
 	if (fd < 0) {
-		size_t errmsg = strlen(fileName) + ERRORMSG + (sys->verbose == 2 ? MAX_COLORLEN : 0);
-		char fileNameError[errmsg];
-		bzero(&fileNameError, errmsg);
-		snprintf(fileNameError, errmsg - 1, "%sopen %s%s", Colors[0], fileName, Colors[6]);
-		perror(fileNameError);
+		printError(fileName, sys->verbose);
 		return ;
 	}
 	size_t i = 0;
@@ -33,7 +43,7 @@ void readFile(const char* fileName, t_Setting* sys) {
 				const int verboseB = snprintf(verboseLine, buffSize, "[%s%zu%s]: -> %s", Colors[1], i, Colors[6], line);
 				write(STDERR_FILENO, verboseLine, verboseB);
 			}
-			write(STDOUT_FILENO, line, len);
+			sendData(line, len, 0);
 		}
 		free(line);
 		usleep(sys->sleep * sys->speed);
@@ -43,9 +53,12 @@ void readFile(const char* fileName, t_Setting* sys) {
 
 void printHelp(void) {
 	size_t i = 0;
-	while (__help[i]) {
-		fprintf(stderr, "%s\n", __help[i++]);
+	fprintf(stderr, "------------------------\n");
+	while (__flags[i] && __help[i]) {
+		fprintf(stderr, "\n--%-13s -%s\n", __flags[i], __help[i]);
+		i++;
 	}
+	fprintf(stderr, "------------------------\n");
 }
 
 void SetSetting(t_Setting *sysSetting, int c) {
@@ -75,6 +88,12 @@ void SetSetting(t_Setting *sysSetting, int c) {
 	}
 }
 
+/*
+void SetSettingVerbose(t_Setting *sysSetting, const char* const arg) {
+
+}
+*/
+
 void userInput(void) {
 	char* user = "";
 	fprintf(stderr, "user input mode:\n");
@@ -94,15 +113,21 @@ int main(int ac, char** av) {
 		.interactive = 0,
 		.sleep = 1000,
 		.speed = 1,
-		.verbose = 0
+		.verbose = 0,
+		.readBuffer = 100,
+		.error = 0
 	};
 	if (ac >= 2) {
 		int i = 1;
 		while (i < ac) {
-			if (av[i] && av[i][0] == '-') {
+			if (strncmp(av[i], "--", 2) == 0) {
+				fprintf(stderr, "here %s\n", av[i + 1]);
+				i++;
+			}
+			else if (av[i] && av[i][0] == '-' && av[i][1] != 0) {
 				size_t arglen = strlen(av[i]);
-				for (size_t j = 1; j < arglen; j++) {
-					SetSetting(&sysSetting, av[i][j]);
+				for (size_t k = 1; k < arglen; k++) {
+					SetSetting(&sysSetting, av[i][k]);
 				}
 			}
 			else {

@@ -29,19 +29,31 @@
 # include <stdlib.h>
 # include <string.h> //strlen
 # include <stdbool.h>
+//
+#include <sys/ioctl.h>
+#include <sys/socket.h>
 
 # define ERRORMSG 10
 
 # define FLAG_LIST "isShvc"
 
-const char* __help[] = {
-	"----------------------------------------------",
-	"i - give back the control after the scrip run",
+const char* const __flags[] = {
+	"interactive",
+	"slow",
+	"super-slow",
+	"verbose",
+	"colors",
+	"help",
+	NULL
+};
+
+const char* const __help[] = {
+	"i - give back the control after all files are read and send",
 	"s - set usleep speed to 100000 (default 1000)",
 	"S - set usleep speed to 1000000",
 	"v - prits line send from file in stderr",
 	"c - like v but add colors to stderr",
-	"----------------------------------------------",
+	"h - show this message",
 	NULL
 };
 
@@ -56,12 +68,17 @@ const char *Colors[] = {
 	NULL
 };
 
+typedef struct sockaddr t_sockaddr;
+
 typedef struct Setting {
 	const char*	const	progameName;
 	bool				interactive;
 	int 				sleep;
 	int 				speed;
 	int					verbose;
+	size_t				readBuffer;
+	t_sockaddr			sock;
+	int					error;
 } t_Setting;
 
 #endif
