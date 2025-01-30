@@ -1,12 +1,12 @@
-#ifndef  _IRC_TESTER_
-# define _IRC_TESTER_
+#ifndef  _IRC_TESTER_H_
+# define _IRC_TESTER_H_
 
 # include "tools.h"
 //
 # ifndef COLORS
 #  define COLORS
-#  define CS	"\001" //*start code
-#  define CE	"\002\0" //*end   code 
+#  define CS	"\001"   //*start code
+#  define CE	"\002\0" //*end   code
 #  define RED	CS"\e[31m"CE
 #  define GRN	CS"\e[32m"CE
 #  define YEL	CS"\e[33m"CE
