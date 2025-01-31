@@ -18,16 +18,16 @@
 
 void func(int sockfd)
 {
-    char* msg = "PASS abc"ENDL"NICK aaa"ENDL"USER abc * 0 :aaa"ENDL;
-    send(sockfd, msg, strlen(msg), 0);
-    char buff[10];
-    int data = 1;
-    while (data) {
-      bzero(buff, 10);
-      recv(sockfd, buff, 10 - 1, 0);
-      ioctl(sockfd, FIONREAD, &data);
-      printf("|%i| -> %s\n", data, buff);
-    }
+  char* msg = "PASS abc"ENDL"NICK aaa"ENDL"USER abc * 0 :aaa"ENDL;
+  send(sockfd, msg, strlen(msg), 0);
+  char buff[10];
+  int data = 1;
+  while (data) {
+    bzero(buff, 10);
+    recv(sockfd, buff, 10 - 1, 0);
+    ioctl(sockfd, FIONREAD, &data);
+    printf("|%i| -> %s\n", data, buff);
+  }
 }
 
 int main()

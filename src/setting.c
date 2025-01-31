@@ -1,0 +1,61 @@
+#include "irc_tester.h"
+
+void setColors(void) {
+  Colors[0] = RED;
+  Colors[1] = GRN;
+  Colors[2] = YEL;
+  Colors[3] = BLU;
+  Colors[4] = MAG;
+  Colors[5] = CYN;
+  Colors[6] = RESET;
+}
+
+void SetSetting(t_Setting *sysSetting, int c) {
+  switch (c) {
+  case 'i':
+    sysSetting->interactive = true;
+    break;
+  case 's':
+    sysSetting->speed = 100;
+    break;
+  case 'S':
+    sysSetting->speed = 1000;
+    break;
+  case 'v':
+    sysSetting->verbose = 1;
+    break;
+  case 'c':
+    sysSetting->verbose = 2;
+    setColors();
+    break;
+  case 'n':
+    // network ft
+    break;
+  case 'h':
+    printHelp();
+    exit(sysSetting->error);
+  default:
+    fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", sysSetting->progameName, c, FLAG_LIST);
+    sysSetting->error = 1;
+    break;
+  }
+}
+
+inline int same(const char* const s1, const char* const s2) {
+  return (strncmp(s1, s2, strlen(s2) + 1));
+}
+
+void SetSettingVerbose(t_Setting *sysSetting, const char* const arg) {
+  if (same(arg, __flags[0]) == 0) {
+    sysSetting->interactive = true;
+  }
+  else if (same(arg, __flags[1]) == 0) {
+    sysSetting->speed = 100;
+  }
+  else if (same(arg, __flags[1]) == 0) {
+
+  }
+  else {
+    // error message here
+  }
+}

@@ -1,13 +1,24 @@
 # include "irc_tester.h"
 
-void setColors(void) {
-  Colors[0] = RED;
-  Colors[1] = GRN;
-  Colors[2] = YEL;
-  Colors[3] = BLU;
-  Colors[4] = MAG;
-  Colors[5] = CYN;
-  Colors[6] = RESET;
+const char* Colors[] = {
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  NULL
+};
+
+void printHelp(void) {
+  size_t i = 0;
+  fprintf(stderr, "------------------------\n");
+  while (__flags[i] && __help[i]) {
+    fprintf(stderr, "\n--%-13s -%s\n", __flags[i], __help[i]);
+    i++;
+  }
+  fprintf(stderr, "------------------------\n");
 }
 
 ssize_t sendData(const char* const line, const size_t byte, int const fd) {
@@ -61,53 +72,6 @@ void readFile(const char* fileName, t_Setting* sys) {
   close(fd);
 }
 
-static void printHelp(void) {
-  size_t i = 0;
-  fprintf(stderr, "------------------------\n");
-  while (__flags[i] && __help[i]) {
-    fprintf(stderr, "\n--%-13s -%s\n", __flags[i], __help[i]);
-    i++;
-  }
-  fprintf(stderr, "------------------------\n");
-}
-
-void SetSetting(t_Setting *sysSetting, int c) {
-  switch (c) {
-  case 'i':
-    sysSetting->interactive = true;
-    break;
-  case 's':
-    sysSetting->speed = 100;
-    break;
-  case 'S':
-    sysSetting->speed = 1000;
-    break;
-  case 'v':
-    sysSetting->verbose = 1;
-    break;
-  case 'c':
-    sysSetting->verbose = 2;
-    setColors();
-    break;
-  case 'n':
-    // network ft
-    break;
-  case 'h':
-    printHelp();
-    exit(sysSetting->error);
-  default:
-    fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", sysSetting->progameName, c, FLAG_LIST);
-    sysSetting->error = 1;
-    break;
-  }
-}
-
-/*
-void SetSettingVerbose(t_Setting *sysSetting, const char* const arg) {
-
-}
-*/
-
 void userInput(void) {
   char* user = "";
   fprintf(stderr, "user input mode:\n");
@@ -129,7 +93,7 @@ int main(int ac, char** av) {
     .speed = 1,
     .verbose = 0,
     .readBuffer = 100,
-    .error = 0
+    .error = 0,
   };
   bzero(&sysSetting.sock, sizeof(sysSetting.sock));
   if (ac >= 2) {
