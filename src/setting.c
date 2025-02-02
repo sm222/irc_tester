@@ -22,7 +22,7 @@ void SetSetting(t_Setting *sysSetting, int c) {
     sysSetting->speed = 1000;
     break;
   case 'v':
-    sysSetting->verbose = 1;
+    sysSetting->verbose = sysSetting->verbose > 1 ? 2 : 0;
     break;
   case 'c':
     sysSetting->verbose = 2;
@@ -41,7 +41,7 @@ void SetSetting(t_Setting *sysSetting, int c) {
   }
 }
 
-inline int same(const char* const s1, const char* const s2) {
+static int same(const char* const s1, const char* const s2) {
   return (strncmp(s1, s2, strlen(s2) + 1));
 }
 
@@ -52,10 +52,24 @@ void SetSettingVerbose(t_Setting *sysSetting, const char* const arg) {
   else if (same(arg, __flags[1]) == 0) {
     sysSetting->speed = 100;
   }
-  else if (same(arg, __flags[1]) == 0) {
-
+  else if (same(arg, __flags[2]) == 0) {
+    sysSetting->speed = 1000;
+  }
+  else if (same(arg, __flags[3]) == 0) {
+    sysSetting->verbose = sysSetting->verbose > 1 ? 2 : 0;
+  }
+  else if (same(arg, __flags[4]) == 0) {
+    sysSetting->verbose = 2;
+  }
+  else if (same(arg, __flags[5]) == 0) {
+    printHelp();
+    exit(sysSetting->error);
   }
   else {
+    fprintf(stderr, "%s: unknown %s, flag that can be use are \n", sysSetting->progameName, arg);
+    for (size_t i = 0; __flags[i]; i++) {
+      fprintf(stderr, "--%s\n", __flags[i]);
+    }
     // error message here
   }
 }

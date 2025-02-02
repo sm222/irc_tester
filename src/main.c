@@ -13,9 +13,9 @@ const char* Colors[] = {
 
 void printHelp(void) {
   size_t i = 0;
-  fprintf(stderr, "------------------------\n");
+  fprintf(stderr, "------------------------");
   while (__flags[i] && __help[i]) {
-    fprintf(stderr, "\n--%-13s -%s\n", __flags[i], __help[i]);
+    fprintf(stderr, "\n--%-14s -%s\n", __flags[i], __help[i]);
     i++;
   }
   fprintf(stderr, "------------------------\n");
@@ -100,7 +100,7 @@ int main(int ac, char** av) {
     int i = 1;
     while (i < ac) {
       if (strncmp(av[i], "--", 2) == 0) {
-        fprintf(stderr, "here %s\n", av[i + 1]);
+        SetSettingVerbose(&sysSetting, av[i] + 2);
         i++;
       }
       else if (av[i] && av[i][0] == '-' && av[i][1] != 0) {

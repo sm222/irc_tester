@@ -37,6 +37,7 @@
 
 # define FLAG_LIST "isShvc"
 
+
 static const char* const __flags[] = {
   "interactive",
   "slow",
@@ -77,5 +78,6 @@ void printHelp(void);
 void setColors(void);
 
 void SetSetting(t_Setting *sysSetting, int c);
+void SetSettingVerbose(t_Setting *sysSetting, const char* const arg);
 
 #endif
