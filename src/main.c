@@ -95,6 +95,7 @@ int main(int ac, char** av) {
     .readBuffer = 100,
     .error = 0,
   };
+  bzero(&sysSetting.format, sizeof(char) * FORMAT_BUFF);
   bzero(&sysSetting.sock, sizeof(sysSetting.sock));
   if (ac >= 2) {
     int i = 1;
