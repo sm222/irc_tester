@@ -1,28 +1,9 @@
-PASS 4242
+PASS aaa
 NICK nick
 USER nick * 0 :user
 #
-JOIN ##
-MODE ## +-k abc
-PRIVMSG ## : PASS!
-MODE ## o-k abc2
-PRIVMSG ## : PASS!
-MODE ## +++
-PRIVMSG ## : PASS!
-MODE ## +-k abc
-PRIVMSG ## : PASS!
-MODE ## +- !
-PRIVMSG ## : PASS!
-MODE ##  !
-PRIVMSG ## : PASS!
-MODE ##  *8
-PRIVMSG ## : PASS!
-MODE ##  % % % % % % %% %  %% % %
-PRIVMSG ## : PASS!
-MODE ## +++
-PRIVMSG ## : PASS!
-MODE ## ----k abc -
-PRIVMSG ## : PASS!
+JOIN #A
+PRIVMSG #A hello
 
 
 #

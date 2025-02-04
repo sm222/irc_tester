@@ -2,27 +2,9 @@
 # define _IRC_TESTER_H_
 
 # include "tools.h"
+# include "network.h"
 //
-# ifndef COLORS
-#  define COLORS
-#  define CS  "\001"   //*start code
-#  define CE  "\002\0" //*end   code
-#  define RED    CS"\e[31m"CE
-#  define GRN    CS"\e[32m"CE
-#  define YEL    CS"\e[33m"CE
-#  define BLU    CS"\e[34m"CE
-#  define MAG    CS"\e[35m"CE
-#  define CYN    CS"\e[36m"CE
-#  define WHT    CS"\e[37m"CE
-#  define ORG    CS"\e[38;5;202m"CE
-#  define PIK    CS"\e[38;5;176m"CE
-#  define TOX    CS"\e[38;5;51m"CE
-#  define RESET  CS"\e[0m\022"CE
-#  define CLE    CS"\e[1;1H\x1b[2J"CE
-#  define GIT    CS"\e[38;5;82m"CE
-#  define GIT_B  CS"\e[38;5;94m"CE
-#  define MAX_COLORLEN 20
-# endif
+
 
 //
 # include <fcntl.h> // open
@@ -30,14 +12,13 @@
 # include <string.h> //strlen
 # include <stdbool.h>
 //
-#include <sys/ioctl.h>
-#include <sys/socket.h>
+
 
 # define ERRORMSG 10
 
 # define FLAG_LIST "isShvchnpf"
 
-# define FORMAT_BUFF 20
+# define FORMAT_BUFF_SIZE 20
 
 
 static const char* const __flags[] = {
@@ -68,10 +49,8 @@ static const char* const __help[] = {
 
 extern const char *Colors[];
 
-typedef struct sockaddr t_sockaddr;
-
 typedef struct args {
-  const char** av;
+  const char* const* av;
   int*         i;
   size_t*      j;
   size_t*      k;
@@ -85,16 +64,18 @@ typedef struct Setting {
   int               speed;
   int               verbose;
   size_t            readBuffer;
-  char              format[FORMAT_BUFF];
+  char              format[FORMAT_BUFF_SIZE];
   t_sockaddr        sock;
+  int               port;
   int               fd;
   int               error;
+  t_args            args;
 } t_Setting;
 
 void printHelp(void);
 void setColors(void);
 
-void SetSetting(t_Setting *sysSetting, int c);
+void SetSetting(t_Setting *sysSetting);
 void SetSettingVerbose(t_Setting *sysSetting, const char* const arg);
 
 #endif

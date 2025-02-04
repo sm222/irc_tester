@@ -3,6 +3,7 @@ fileDir='src'
 
 files=(
   'setting.c'
+  'network.c'
   'tools.c'
   'main.c'
 )

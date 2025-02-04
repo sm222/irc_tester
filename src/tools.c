@@ -6,19 +6,10 @@ void  *ft_sfree(void *p) {
   return (NULL);
 }
 
-static size_t  ft_strlen(char *s) {
-  size_t  i;
-
-  i = 0;
-  while (s && s[i])
-    i++;
-  return (i);
-}
-
-char  *ft_strjoin(char *sfree, char *s2) {
+char*  ft_strjoin(char *sfree, char *s2) {
   size_t  s1_i;
   size_t  s2_i;
-  char  *new;
+  char*   new;
 
   s1_i = ft_strlen(sfree);
   s2_i = ft_strlen(s2);
@@ -36,8 +27,8 @@ char  *ft_strjoin(char *sfree, char *s2) {
   return (ft_sfree(sfree), new);
 }
 
-char  *ft_tiny_split(char *s, size_t *cut) {
-  char  *new;
+char*  ft_tiny_split(char* s, size_t* cut) {
+  char* new;
   size_t  i;
 
   i = 0;
@@ -53,7 +44,7 @@ char  *ft_tiny_split(char *s, size_t *cut) {
   return (new);
 }
 
-char  ft_find(char *s) {
+static char  ft_find(char* s) {
   size_t  i;
 
   i = 0;
@@ -65,7 +56,7 @@ char  ft_find(char *s) {
   return ('0');
 }
 
-char  *safe_return(char **book, t_info *t_val) {
+char* safe_return(char** book, t_info* t_val) {
   t_val->tmp = ft_tiny_split(*book, &t_val->cut);
   if (!t_val->tmp) {
     *book = ft_sfree(*book);
@@ -77,9 +68,9 @@ char  *safe_return(char **book, t_info *t_val) {
   return (t_val->tmp);
 }
 
-char  *get_next_line(int fd) {
-  static char  *book = NULL;
-  t_info    t_val;
+char*  get_next_line(int fd) {
+  static char*  book = NULL;
+  t_info        t_val;
 
   if (fd < 0 || BUFFER_SIZE <= 0 || fd > FOPEN_MAX)
     return (book = ft_sfree(book));
@@ -105,7 +96,7 @@ char  *get_next_line(int fd) {
   return (safe_return(&book, &t_val));
 }
 
-static void ft_allfree(char **p) {
+static void ft_allfree(char** p) {
   int i;
 
   i = 0;
@@ -114,9 +105,9 @@ static void ft_allfree(char **p) {
   free(p);
 }
 
-static int  nb_word(const char *str, char c) {
-  int i;
-  int size;
+static unsigned int  nb_word(const char* str, char c) {
+  unsigned int i;
+  unsigned int size;
 
   i = 0;
   size = 0;
@@ -148,7 +139,7 @@ static char  *ft_strdup_c(const char *str, char c) {
 
 /// @brief split a sring on a spesific caracter
 /// @param s input 
-/// @param c carater
+/// @param c char
 /// @return new double array
 char **ft_split(char const *s, char c) {
   char**  new;

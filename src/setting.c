@@ -10,7 +10,9 @@ void setColors(void) {
   Colors[6] = RESET;
 }
 
-void SetSetting(t_Setting *sysSetting, int c) {
+void SetSetting(t_Setting *sysSetting) {
+  t_args* args = &sysSetting->args;
+  const char c = args->av[*args->i][*args->k];
   switch (c) {
   case 'i':
     sysSetting->interactive = true;
@@ -29,7 +31,13 @@ void SetSetting(t_Setting *sysSetting, int c) {
     setColors();
     break;
   case 'n':
-    // network ft
+    int fd = openSocket(&sysSetting->sock, sysSetting->port);
+    if (fd >= 0)
+      sysSetting->fd = fd;
+    else {
+      close(fd);
+      exit(2);
+    }
     break;
   case 'h':
     printHelp();
