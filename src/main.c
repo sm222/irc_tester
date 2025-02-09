@@ -11,7 +11,7 @@ const char* Colors[] = {
   NULL
 };
 
-void printHelp(void) {
+void PrintHelp(void) {
   size_t i = 0;
   fprintf(stderr, "------------------------");
   while (__flags[i] && __help[i]) {
@@ -21,7 +21,7 @@ void printHelp(void) {
   fprintf(stderr, "------------------------\n");
 }
 
-ssize_t sendData(const char* const line, const size_t byte, int const fd, t_Setting* sys) {
+static ssize_t sendData(const char* const line, const size_t byte, int const fd, t_Setting* sys) {
   const size_t buffSize = byte + ft_strlen(sys->format)
   char message[buffSize + 1];
   memmove(message, line, byte);
@@ -32,7 +32,7 @@ ssize_t sendData(const char* const line, const size_t byte, int const fd, t_Sett
   return (send(fd, message, buffSize, 0));
 }
 
-void printOpenError(const char* const fileName, int colors) {
+static void printOpenError(const char* const fileName, int colors) {
   size_t errmsg = strlen(fileName) + ERRORMSG + (colors == 2 ? MAX_COLORLEN : 0);
   char fileNameError[errmsg];
   bzero(&fileNameError, errmsg);
@@ -40,11 +40,11 @@ void printOpenError(const char* const fileName, int colors) {
   perror(fileNameError);
 }
 
-void printVerbose(const char* const str, const int mode, const size_t len, const size_t index) {
+void printVerbose(const char* const str, const int recv, const size_t len, const size_t index) {
   const size_t buffSize = len + 20 + (MAX_COLORLEN * 2);
-  char verboseLine[buffSize];
+  char verboseLine[buffSize + 1];
   int verboseB = 0;
-  if (!mode)
+  if (!recv)
     verboseB = snprintf(verboseLine, buffSize, "[%s%-4zu%s]: -> %s\n", Colors[1], index, Colors[6], str);
   else {
     verboseB = snprintf(verboseLine, buffSize, "[%s%-4zu%s]: <- %s\n", Colors[2], index, Colors[6], str);
@@ -118,14 +118,14 @@ void readFile(const char* fileName, t_Setting* sys) {
 void userInput(void) {
   char* user = "";
   fprintf(stderr, "user input mode:\n");
-    while (user) {
-      write(STDERR_FILENO, ">", 1);
-      user =  get_next_line(STDIN_FILENO); //user input
-      if (user) {
-        write(STDOUT_FILENO, user, strlen(user));
-        free(user);
-      }
+  while (user) {
+    write(STDERR_FILENO, ">", 1);
+    user =  get_next_line(STDIN_FILENO); //user input
+    if (user) {
+      write(STDOUT_FILENO, user, strlen(user));
+      free(user);
     }
+  }
 }
 
 int main(int ac, const char* const* av) {
@@ -171,7 +171,7 @@ int main(int ac, const char* const* av) {
       sleep(2);
   }
   else {
-    fprintf(stderr, "%s {file*}\n", av[0]);
+    fprintf(stderr, "%s {flags* %s} {files*}\n", av[0], FLAG_LIST);
   }
   return sysSetting.error;
 }

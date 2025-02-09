@@ -138,7 +138,7 @@ static char  *ft_strdup_c(const char *str, char c) {
 }
 
 /// @brief split a sring on a spesific caracter
-/// @param s input 
+/// @param s input
 /// @param c char
 /// @return new double array
 char **ft_split(char const *s, char c) {
@@ -165,4 +165,4 @@ char **ft_split(char const *s, char c) {
   return (new);
 }
 
-///
+//

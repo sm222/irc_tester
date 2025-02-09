@@ -40,7 +40,7 @@ int openSocket(t_sockaddr* sock, int port) {
 
 void connectionClose(int color) {
   if (color > 1)
-    fprintf(stderr, "%sconnection was clone with the server%s\n", RED, RESET);
+    fprintf(stderr, "%sconnection was close with the server%s\n", RED, RESET);
   else
-    fprintf(stderr, "connection was clone with the server\n");
+    fprintf(stderr, "connection was close with the server\n");
 }

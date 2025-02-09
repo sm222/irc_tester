@@ -1,6 +1,6 @@
 #include "irc_tester.h"
 
-void setColors(void) {
+void SetColors(void) {
   Colors[0] = RED;
   Colors[1] = GRN;
   Colors[2] = YEL;
@@ -28,7 +28,7 @@ void SetSetting(t_Setting *sysSetting) {
     break;
   case 'c':
     sysSetting->verbose = 2;
-    setColors();
+    SetColors();
     break;
   case 'n':
     int fd = openSocket(&sysSetting->sock, sysSetting->port);
@@ -40,7 +40,7 @@ void SetSetting(t_Setting *sysSetting) {
     }
     break;
   case 'h':
-    printHelp();
+    PrintHelp();
     exit(sysSetting->error);
   default:
     fprintf(stderr, "%s: unknown %c, flag that can be use are %s\n", sysSetting->progameName, c, FLAG_LIST);
@@ -49,6 +49,8 @@ void SetSetting(t_Setting *sysSetting) {
   }
 }
 
+
+// need to add '='
 static int same(const char* const s1, const char* const s2) {
   return (strncmp(s1, s2, strlen(s2) + 1));
 }
@@ -70,7 +72,7 @@ void SetSettingVerbose(t_Setting *sysSetting, const char* const arg) {
     sysSetting->verbose = 2;
   }
   else if (same(arg, __flags[5]) == 0) {
-    printHelp();
+    PrintHelp();
     exit(sysSetting->error);
   }
   else {

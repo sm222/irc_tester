@@ -38,7 +38,7 @@ static const char* const __help[] = {
   "i - give back the control after all files are read and send",
   "s - set usleep speed to 100000 (default 1000)",
   "S - set usleep speed to 1000000",
-  "v - prits line send from file in stderr",
+  "v - print line send from file in stderr",
   "c - like 'v' but add colors to stderr",
   "h - show this message",
   "n - switch to network mode, try to connect on 172.0.0.1 on port 8080",
@@ -72,8 +72,8 @@ typedef struct Setting {
   t_args            args;
 } t_Setting;
 
-void printHelp(void);
-void setColors(void);
+void PrintHelp(void);
+void SetColors(void);
 
 void SetSetting(t_Setting *sysSetting);
 void SetSettingVerbose(t_Setting *sysSetting, const char* const arg);
